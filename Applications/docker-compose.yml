@@ -1,6 +1,26 @@
 version: "3"
 services:
+  # Common containers
+  database:
+    image: mysql:8
+    container_name: database_container
+    #    ports:
+    #      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlrootpass
+#      MYSQL_DATABASE: lrvl_db_name
+      MYSQL_USER: lrvl_user
+      MYSQL_PASSWORD: mysqlpass
 
+  redis:
+    container_name: redis_container
+    image: redis:7-alpine3.16
+    ports:
+      - 6379:6379
+
+
+
+  # Laravel Application containers
   lrvl-nginx:
     container_name: lrvl_nginx_container
     build: Laravel/docker/nginx/
@@ -17,6 +37,8 @@ services:
   lrvl-php-fpm:
     container_name: lrvl_php_fpm_container
     build: Laravel/docker/php-fpm/
+    depends_on:
+      - database
     volumes:
       - ./Laravel/src:/var/www/html
 
@@ -24,25 +46,28 @@ services:
   lrvl-php-worker:
     container_name: lrvl_php_worker_container
     build: Laravel/docker/php-cli/
+    depends_on:
+      - database
     volumes:
       - ./Laravel/src:/var/www/html
 
-  database:
-    image: mysql:8
-    container_name: database_container
-    #    ports:
-    #      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: mysqlrootpass
-      MYSQL_DATABASE: lrvl_db_name
-      MYSQL_USER: lrvl_user
-      MYSQL_PASSWORD: mysqlpass
+  # Wordpress Application containers
 
-  redis:
-    container_name: redis_container
-    image: redis:7-alpine3.16
+  wordpress:
+    image: docker.io/bitnami/wordpress-nginx:6
     ports:
-      - 6379:6379
-
-
+      - '80:8080'
+      - '443:8443'
+    volumes:
+      - ./Wordpress/src:/bitnami/wordpress
+    depends_on:
+      - database
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - WORDPRESS_DATABASE_HOST=database
+      - WORDPRESS_DATABASE_PORT_NUMBER=3306
+      - WORDPRESS_DATABASE_USER=root
+      - WORDPRESS_DATABASE_NAME=wp
+      - WORDPRESS_DATABASE_PASSWORD=mysqlrootpass
 
