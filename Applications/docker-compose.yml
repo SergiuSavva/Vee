@@ -1,0 +1,48 @@
+version: "3"
+services:
+
+  lrvl-nginx:
+    container_name: lrvl_nginx_container
+    build: Laravel/docker/nginx/
+    environment:
+      PHP_UPSTREAM_CONTAINER: lrvl-php-fpm
+      PHP_UPSTREAM_PORT: 9000
+    volumes:
+      - ./Laravel/src:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - lrvl-php-fpm
+
+  lrvl-php-fpm:
+    container_name: lrvl_php_fpm_container
+    build: Laravel/docker/php-fpm/
+    volumes:
+      - ./Laravel/src:/var/www/html
+
+
+  lrvl-php-worker:
+    container_name: lrvl_php_worker_container
+    build: Laravel/docker/php-cli/
+    volumes:
+      - ./Laravel/src:/var/www/html
+
+  database:
+    image: mysql:8
+    container_name: database_container
+    #    ports:
+    #      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlrootpass
+      MYSQL_DATABASE: lrvl_db_name
+      MYSQL_USER: lrvl_user
+      MYSQL_PASSWORD: mysqlpass
+
+  redis:
+    container_name: redis_container
+    image: redis:7-alpine3.16
+    ports:
+      - 6379:6379
+
+
+
