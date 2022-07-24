@@ -64,7 +64,7 @@ services:
 
   wordpress:
 #    image: docker.io/bitnami/wordpress-nginx:6
-    build: ./Wordpress/src/
+    build: ./Wordpress
     ports:
       - '80:8080'
       - '443:8443'
