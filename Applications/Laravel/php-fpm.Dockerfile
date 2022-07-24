@@ -32,7 +32,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 ADD ./docker/php-fpm/laravel.ini /usr/local/etc/php/conf.d
 
-ADD ./ /var/www/html/
+ADD ./src/ /var/www/html/
 
 WORKDIR /var/www/html
 

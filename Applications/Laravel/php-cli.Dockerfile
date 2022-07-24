@@ -37,7 +37,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www/html
 
 # Below commented code will be used in K8s deployment
-ADD application .
+ADD ./src/ /var/www/html
 
 RUN composer install --no-dev --optimize-autoloader
 

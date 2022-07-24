@@ -26,7 +26,7 @@ services:
   lrvl-nginx:
     container_name: lrvl_nginx_container
     build:
-        context: Laravel/src
+        context: Laravel
         dockerfile: nginx.Dockerfile
     environment:
       PHP_UPSTREAM_CONTAINER: lrvl-php-fpm
@@ -41,7 +41,7 @@ services:
   lrvl-php-fpm:
     container_name: lrvl_php_fpm_container
     build:
-        context: Laravel/src
+        context: Laravel
         dockerfile: php-fpm.Dockerfile
     depends_on:
       - database
@@ -52,7 +52,7 @@ services:
   lrvl-php-worker:
     container_name: lrvl_php_worker_container
     build:
-      context: Laravel/src
+      context: Laravel
       dockerfile: php-cli.Dockerfile
     depends_on:
       - redis

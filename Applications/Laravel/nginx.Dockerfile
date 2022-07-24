@@ -19,7 +19,7 @@ RUN echo "upstream php-upstream { server ${PHP_UPSTREAM_CONTAINER}:${PHP_UPSTREA
 RUN mkdir -p "/var/www/html"
 
 # Will be used in k8s deployment
-ADD ./ /var/www/html
+ADD ./src/ /var/www/html
 
 CMD ["nginx"]
 
