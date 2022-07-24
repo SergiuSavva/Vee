@@ -11,6 +11,8 @@ services:
 #      MYSQL_DATABASE: lrvl_db_name
       MYSQL_USER: lrvl_user
       MYSQL_PASSWORD: mysqlpass
+    ports:
+      - "3306:3306"
 
   redis:
     container_name: redis_container
@@ -23,12 +25,14 @@ services:
   # Laravel Application containers
   lrvl-nginx:
     container_name: lrvl_nginx_container
-    build: Laravel/docker/nginx/
+    build:
+        context: Laravel/src
+        dockerfile: nginx.Dockerfile
     environment:
       PHP_UPSTREAM_CONTAINER: lrvl-php-fpm
       PHP_UPSTREAM_PORT: 9000
-    volumes:
-      - ./Laravel/src:/var/www/html
+#    volumes:
+#      - ./Laravel/src:/var/www/html
     ports:
       - "80:80"
     depends_on:
@@ -36,25 +40,31 @@ services:
 
   lrvl-php-fpm:
     container_name: lrvl_php_fpm_container
-    build: Laravel/docker/php-fpm/
+    build:
+        context: Laravel/src
+        dockerfile: php-fpm.Dockerfile
     depends_on:
       - database
-    volumes:
-      - ./Laravel/src:/var/www/html
+#    volumes:
+#      - ./Laravel/src:/var/www/html
 
 
   lrvl-php-worker:
     container_name: lrvl_php_worker_container
-    build: Laravel/docker/php-cli/
+    build:
+      context: Laravel/src
+      dockerfile: php-cli.Dockerfile
     depends_on:
+      - redis
       - database
-    volumes:
-      - ./Laravel/src:/var/www/html
+#    volumes:
+#      - ./Laravel/src:/var/www/html
 
   # Wordpress Application containers
 
   wordpress:
-    image: docker.io/bitnami/wordpress-nginx:6
+#    image: docker.io/bitnami/wordpress-nginx:6
+    build: ./Wordpress/src/
     ports:
       - '80:8080'
       - '443:8443'

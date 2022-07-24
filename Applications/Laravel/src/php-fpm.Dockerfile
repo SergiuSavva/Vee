@@ -1,8 +1,6 @@
 FROM php:8.1-fpm-alpine3.16
 
-
 ENV AWS_DEFAULT_REGION=eu-west-1
-
 
 RUN apk --no-cache add \
   git \
@@ -32,13 +30,13 @@ RUN mkdir -p /var/www/html/
 ## Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --2
 
-ADD ./laravel.ini /usr/local/etc/php/conf.d
+ADD ./docker/php-fpm/laravel.ini /usr/local/etc/php/conf.d
+
+ADD ./ /var/www/html/
 
 WORKDIR /var/www/html
 
-# ADD application .
-
-# RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader
 
 RUN chown -R www-data:www-data /var/www/html/
 
