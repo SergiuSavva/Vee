@@ -1,0 +1,8 @@
+image:
+  repository: 602401143452.dkr.ecr.${region}.amazonaws.com/eks/aws-efs-csi-driver
+controller:
+  serviceAccount:
+    create: true
+    name: efs-csi-controller-sa
+    annotations:
+      eks.amazonaws.com/role-arn: ${role_arn}

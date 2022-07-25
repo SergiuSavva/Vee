@@ -9,7 +9,10 @@ resource "aws_eks_cluster" "default" {
     endpoint_public_access  = true
   }
 
-  depends_on = [aws_iam_role.eks_cluster_role]
+  depends_on = [
+    module.vpc,
+    aws_iam_role.eks_cluster_role,
+  ]
 }
 
 resource "aws_eks_node_group" "default" {
@@ -35,7 +38,10 @@ resource "aws_eks_node_group" "default" {
     max_unavailable = 1
   }
 
-  depends_on = [aws_iam_role.eks_node_role]
+  depends_on = [
+    module.vpc,
+    aws_iam_role.eks_node_role,
+  ]
 }
 
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
