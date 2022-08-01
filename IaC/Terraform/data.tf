@@ -15,5 +15,5 @@ data "aws_eks_cluster_auth" "default" {
 }
 
 data "tls_certificate" "eks_cluster" {
-  url = aws_eks_cluster.default.identity[0].oidc[0].issuer
+  url        = aws_eks_cluster.default.identity[0].oidc[0].issuer
 }

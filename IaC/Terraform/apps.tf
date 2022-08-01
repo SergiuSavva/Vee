@@ -31,3 +31,13 @@ resource "helm_release" "redis" {
 
   values = [templatefile("${path.module}/helm-values/redis.yaml", {})]
 }
+
+resource "helm_release" "laravel" {
+  name             = "laravel"
+  namespace        = "laravel"
+  repository       = "${path.module}/helm-charts"
+  chart            = "laravel"
+  atomic           = true
+  create_namespace = true
+  force_update     = true
+}
