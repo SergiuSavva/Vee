@@ -81,3 +81,10 @@ services:
       - WORDPRESS_DATABASE_NAME=wp
       - WORDPRESS_DATABASE_PASSWORD=mysqlrootpass
 
+
+  nextjs:
+    build:
+        context: NextJs
+        dockerfile: Dockerfile
+    ports:
+      - '80:3000'
