@@ -6,6 +6,7 @@ resource "helm_release" "mysql" {
   version          = "9.2.0"
   atomic           = true
   create_namespace = true
+  depends_on       = [aws_eks_cluster.default]
 
   values = [
     templatefile("${path.module}/helm-values/mysql.yaml", {
@@ -28,6 +29,7 @@ resource "helm_release" "redis" {
   version          = "17.0.1"
   atomic           = true
   create_namespace = true
+  depends_on       = [aws_eks_cluster.default]
 
   values = [templatefile("${path.module}/helm-values/redis.yaml", {})]
 }
@@ -39,5 +41,30 @@ resource "helm_release" "laravel" {
   chart            = "laravel"
   atomic           = true
   create_namespace = true
-  force_update     = true
+  depends_on       = [
+    aws_eks_cluster.default,
+    helm_release.redis,
+  ]
+}
+
+resource "helm_release" "wordpress" {
+  name             = "wordpress"
+  namespace        = "laravel"
+  repository       = "https://charts.bitnami.com/bitnami"
+  chart            = "wordpress"
+  version          = "15.0.12"
+  atomic           = true
+  create_namespace = true
+  depends_on       = [
+    aws_eks_cluster.default,
+    helm_release.mysql,
+  ]
+
+  values = [
+    templatefile("${path.module}/helm-values/wordpress.yaml", {
+        username      = var.mysql.username
+        password      = var.mysql.password
+      }
+    )
+  ]
 }

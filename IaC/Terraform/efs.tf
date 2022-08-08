@@ -18,6 +18,7 @@ resource "helm_release" "aws-efs-csi-driver" {
   version          = "2.2.7"
   atomic           = true
   create_namespace = true
+  depends_on       = [aws_eks_cluster.default]
 
   values = [
     templatefile("${path.module}/helm-values/aws-efs-csi-driver-values.yaml", {

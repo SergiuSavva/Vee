@@ -6,6 +6,7 @@ resource "helm_release" "aws-load-balancer-controller" {
   version          = "1.4.2"
   atomic           = true
   create_namespace = true
+  depends_on       = [aws_eks_cluster.default]
 
   values = [
     templatefile("${path.module}/helm-values/aws-load-balancer-controller.yaml", {
