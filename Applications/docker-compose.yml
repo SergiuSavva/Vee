@@ -1,5 +1,7 @@
 version: "3"
+
 services:
+
   # Common containers
   database:
     image: mysql:8
@@ -13,6 +15,8 @@ services:
       MYSQL_PASSWORD: mysqlpass
     ports:
       - "3306:3306"
+    volumes:
+      - ./docker/mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
 
   redis:
     container_name: redis_container
@@ -21,9 +25,9 @@ services:
       - 6379:6379
 
 
-
   # Laravel Application containers
   lrvl-nginx:
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-nginx:latest
     container_name: lrvl_nginx_container
     build:
         context: Laravel
@@ -39,6 +43,7 @@ services:
       - lrvl-php-fpm
 
   lrvl-php-fpm:
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-php-fpm:latest
     container_name: lrvl_php_fpm_container
     build:
         context: Laravel
@@ -50,6 +55,7 @@ services:
 
 
   lrvl-php-worker:
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-php-cli:latest
     container_name: lrvl_php_worker_container
     build:
       context: Laravel
@@ -63,7 +69,7 @@ services:
   # Wordpress Application containers
 
   wordpress:
-#    image: docker.io/bitnami/wordpress-nginx:6
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/wordpress:latest
     build: ./Wordpress
     ports:
       - '80:8080'
@@ -83,8 +89,9 @@ services:
 
 
   nextjs:
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/nextjs:latest
     build:
         context: NextJs
         dockerfile: Dockerfile
     ports:
-      - '80:3000'
+      - '3000:3000'

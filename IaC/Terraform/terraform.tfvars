@@ -21,5 +21,6 @@ mysql           = {
   size          = "8Gi"
   initdbScripts = [
     "scripts/db_init.sql",
+    "scripts/wp_init.sql.gz",
   ]
 }
