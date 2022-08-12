@@ -17,6 +17,7 @@ All the supporting services (ALB Ingress, EFS provisioner, ExternalDNS, cluster-
 - [Helm 3](https://helm.sh/docs/intro/install/)
 
 **Terraform run**
+
 The code expects the following variables to be defined (either via `terraform.tfvars` or via command line):
 ```
 aws_region       = "us-east-1"
@@ -47,7 +48,7 @@ After the VPC is created you can create everything else by running:
 ```
 terraform apply
 ```
-You can destroy the environment using command:
+You can destroy the whole EKS and VPC environment using command:
 ```
 terraform destroy
 ```
