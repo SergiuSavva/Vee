@@ -26,7 +26,7 @@ resource "aws_eks_node_group" "default" {
 
   scaling_config {
     desired_size = each.value.num_instances
-    max_size     = each.value.num_instances
+    max_size     = each.value.max_instances
     min_size     = each.value.num_instances
   }
 

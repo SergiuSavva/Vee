@@ -1,3 +1,4 @@
+replicaCount: 1
 image:
   repository: 602401143452.dkr.ecr.${region}.amazonaws.com/eks/aws-efs-csi-driver
 controller:
