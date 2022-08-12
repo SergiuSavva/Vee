@@ -1,0 +1,39 @@
+# Helm values overrides for wordpress Helm chart by Bitnami.
+# Refer to https://github.com/bitnami/charts/blob/master/bitnami/wordpress/values.yaml
+
+image:
+  debug: true
+  registry: 078449232710.dkr.ecr.eu-west-1.amazonaws.com
+  repository: wordpress
+  tag: latest
+mariadb:
+  enabled: false
+replicaCount: 1
+allowEmptyPassword: false
+service:
+  type: NodePort
+externalDatabase:
+  host: mysql
+  port: 3306
+  database: wp
+  user: lrvl_user
+  password: mysqlpass
+persistence:
+  enabled: true
+  storageClass: efs
+  accessModes:
+  - ReadWriteMany
+ingress:
+  enabled: true
+  pathType: ImplementationSpecific
+  ingressClassName: alb
+  hostname: wp.pr1.savvaco.net
+  path: /*
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: wp.pr1.savvaco.net
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/group.name: apps
+livenessProbe:
+  enabled: false
+readinessProbe:
+  enabled: true

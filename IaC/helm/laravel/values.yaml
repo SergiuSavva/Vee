@@ -1,0 +1,68 @@
+global:
+  nameOverride: lrvl
+  serviceAccount:
+    create: true
+    name: laravel
+    annotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+nginx:
+  name: nginx
+  replicas: 1
+  image:
+    repository: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-nginx
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 80
+  env:
+  - name: PHP_UPSTREAM_CONTAINER
+    value: laravel-php-fpm
+  - name: PHP_UPSTREAM_PORT
+    value: "80"
+  ingress:
+    enabled: true
+    className: alb
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: chart.example.local
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/group.name: apps
+    hosts:
+    - host: chart.example.local
+      paths:
+      - path: /*
+        pathType: ImplementationSpecific
+  resources: {}
+
+php_cli:
+  name: php-cli
+  image:
+    repository: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-php-cli
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  env:
+  - name: REDIS_HOST
+    value: redis-master
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: redis
+        key: redis-password
+  resources: {}
+
+php_fpm:
+  name: php-fpm
+  image:
+    repository: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-php-fpm
+  service:
+    type: ClusterIP
+    port: 9000
+    targetPort: 9000
+  env: []
+  resources: {}
