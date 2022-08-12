@@ -10,6 +10,13 @@ All the software is deployed to EKS using Helm charts.
 
 All the supporting services (ALB Ingress, EFS provisioner, ExternalDNS, cluster-autoscaler) are using [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)
 
+**Prerequisites**
+- [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Terraform >1.0](https://www.terraform.io/downloads)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
+- [Helm 3](https://helm.sh/docs/intro/install/)
+
+**Terraform run**
 The code expects the following variables to be defined (either via `terraform.tfvars` or via command line):
 ```
 aws_region       = "us-east-1"

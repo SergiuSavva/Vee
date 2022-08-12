@@ -12,12 +12,6 @@ variable "eks_node_groups" {
 
 variable "efs_name" {}
 
-variable "mysql" {
-  type            = object({
-    rootPassword  = string
-    username      = string
-    password      = string
-    size          = string
-    initdbScripts = list(string)
-  })
+variable "kubernetes_version" {
+  default = "1.23"
 }

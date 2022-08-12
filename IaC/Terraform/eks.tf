@@ -1,7 +1,7 @@
 resource "aws_eks_cluster" "default" {
   name     = var.eks_cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
-  version  = "1.22"
+  version  = var.kubernetes_version
 
   vpc_config {
     subnet_ids              = concat(module.vpc.private_subnets, module.vpc.public_subnets)
@@ -18,6 +18,7 @@ resource "aws_eks_cluster" "default" {
 resource "aws_eks_node_group" "default" {
   for_each        = var.eks_node_groups
   cluster_name    = aws_eks_cluster.default.name
+  version         = var.kubernetes_version
   node_group_name = each.key
   node_role_arn   = aws_iam_role.eks_node_role.arn
   subnet_ids      = module.vpc.private_subnets
