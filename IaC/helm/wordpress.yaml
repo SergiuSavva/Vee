@@ -26,10 +26,10 @@ persistence:
   - ReadWriteMany
 ingress:
   enabled: true
-  pathType: ImplementationSpecific
+  pathType: Prefix
   ingressClassName: alb
   hostname: wp.pr1.savvaco.net
-  path: /*
+  path: /
   annotations:
     external-dns.alpha.kubernetes.io/hostname: wp.pr1.savvaco.net
     alb.ingress.kubernetes.io/scheme: internet-facing

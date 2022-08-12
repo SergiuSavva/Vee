@@ -16,8 +16,8 @@ helm upgrade -i redis bitnami/redis --version 17.0.1 -f helm/redis.yaml
 helm upgrade -i lrvl helm/laravel -f helm/laravel/values.yaml \
   --set nginx.ingress.annotations."external-dns\.alpha\.kubernetes\.io\/hostname"=laravel.$NAMESPACE.$BASE_DOMAIN \
   --set nginx.ingress.hosts[0].host=laravel.$NAMESPACE.$BASE_DOMAIN \
-  --set nginx.ingress.hosts[0].paths[0].path="/*" \
-  --set nginx.ingress.hosts[0].paths[0].pathType=ImplementationSpecific
+  --set nginx.ingress.hosts[0].paths[0].path="/" \
+  --set nginx.ingress.hosts[0].paths[0].pathType=Prefix
 helm upgrade -i wordpress bitnami/wordpress --version 15.0.12 -f helm/wordpress.yaml \
   --set ingress.hostname=wp.$NAMESPACE.$BASE_DOMAIN \
   --set ingress.annotations."external-dns\.alpha\.kubernetes\.io\/hostname"=wp.$NAMESPACE.$BASE_DOMAIN
@@ -27,5 +27,5 @@ kubectl exec $WP_POD -- wp plugin install wp-graphql --activate
 helm upgrade -i react helm/react -f helm/react/values.yaml \
   --set ingress.annotations."external-dns\.alpha\.kubernetes\.io\/hostname"=$NAMESPACE.$BASE_DOMAIN \
   --set ingress.hosts[0].host=$NAMESPACE.$BASE_DOMAIN \
-  --set ingress.hosts[0].paths[0].path="/*" \
-  --set ingress.hosts[0].paths[0].pathType=ImplementationSpecific
+  --set ingress.hosts[0].paths[0].path="/" \
+  --set ingress.hosts[0].paths[0].pathType=Prefix

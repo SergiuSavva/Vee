@@ -42,6 +42,20 @@ spec:
       http:
         paths:
           {{- range .paths }}
+          - path: /graphql
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: Prefix
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: wordpress
+                port:
+                  name: http
+              {{- else }}
+              serviceName: wordpress
+              servicePort: http
+              {{- end }}
           - path: {{ .path }}
             {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
             pathType: {{ .pathType }}
