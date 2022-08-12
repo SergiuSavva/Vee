@@ -4,10 +4,11 @@ This Terraform code deploys the following items in AWS:
 - EFS filesystem and corresponding [Kubernetes EFS provisioner](https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html)
 - [ALB Ingress Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
 - [ExternalDNS](https://aws.amazon.com/premiumsupport/knowledge-center/eks-set-up-externaldns) addon
+- [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler)
 
 All the software is deployed to EKS using Helm charts.
 
-All the supporting services (ALB Ingress, EFS provisioner, ExternalDNS) are using [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)
+All the supporting services (ALB Ingress, EFS provisioner, ExternalDNS, cluster-autoscaler) are using [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)
 
 The code expects the following variables to be defined (either via `terraform.tfvars` or via command line):
 ```
@@ -29,16 +30,6 @@ eks_node_groups  = {
     disk_size_gb  = 20
   }
 }
-mysql           = {
-  rootPassword  = "mysqlrootpass"
-  username      = "lrvl_user"
-  password      = "mysqlpass"
-  size          = "8Gi"
-  initdbScripts = [
-    "scripts/db_init.sql",
-    "scripts/wp_init.sql",
-  ]
-}
 ```
 
 In order to deploy the TF code first you need to run below command to create the VPC:
@@ -53,3 +44,5 @@ You can destroy the environment using command:
 ```
 terraform destroy
 ```
+
+Terraform state file is located at S3 bucket: s3://vee-terraform-state-storage/terraform.tfstate

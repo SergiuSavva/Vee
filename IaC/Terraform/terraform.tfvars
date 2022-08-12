@@ -16,13 +16,3 @@ eks_node_groups  = {
     disk_size_gb  = 20
   }
 }
-mysql           = {
-  rootPassword  = "mysqlrootpass"
-  username      = "lrvl_user"
-  password      = "mysqlpass"
-  size          = "8Gi"
-  initdbScripts = [
-    "scripts/db_init.sql",
-    "scripts/wp_init.sql.gz",
-  ]
-}

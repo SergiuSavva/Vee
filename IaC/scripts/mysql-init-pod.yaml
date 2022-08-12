@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-init
+spec:
+  containers:
+  - name: init
+    image: mysql:debian
+    env:
+    - name: MYSQL_RANDOM_ROOT_PASSWORD
+      value: "true"
+    ports:
+    - containerPort: 80
