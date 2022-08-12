@@ -10,6 +10,7 @@ mariadb:
   enabled: false
 replicaCount: 1
 allowEmptyPassword: false
+wordpressPlugins: all
 service:
   type: NodePort
 externalDatabase:
