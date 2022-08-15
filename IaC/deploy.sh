@@ -1,10 +1,13 @@
 #!/bin/bash -eu
 NAMESPACE=$1
 BASE_DOMAIN=savvaco.net
+IMAGE_TAG=${2:-latest}
 
 # Create Kubernetes namespace and switch to it
 kubectl create namespace $NAMESPACE || true
 kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE
+
+helm repo update
 
 # Add Bitnami Helm charts repository
 helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -29,7 +32,8 @@ helm upgrade -i lrvl helm/laravel -f helm/laravel/values.yaml \
   --set nginx.ingress.annotations."external-dns\.alpha\.kubernetes\.io\/hostname"=laravel.$NAMESPACE.$BASE_DOMAIN \
   --set nginx.ingress.hosts[0].host=laravel.$NAMESPACE.$BASE_DOMAIN \
   --set nginx.ingress.hosts[0].paths[0].path="/" \
-  --set nginx.ingress.hosts[0].paths[0].pathType=Prefix
+  --set nginx.ingress.hosts[0].paths[0].pathType=Prefix \
+  --set image.tag=$IMAGE_TAG
 
 # Install Wordpress app
 helm upgrade -i wordpress bitnami/wordpress --version 15.0.12 -f helm/wordpress.yaml \
@@ -46,4 +50,5 @@ helm upgrade -i react helm/react -f helm/react/values.yaml \
   --set ingress.annotations."external-dns\.alpha\.kubernetes\.io\/hostname"=$NAMESPACE.$BASE_DOMAIN \
   --set ingress.hosts[0].host=$NAMESPACE.$BASE_DOMAIN \
   --set ingress.hosts[0].paths[0].path="/" \
-  --set ingress.hosts[0].paths[0].pathType=Prefix
+  --set ingress.hosts[0].paths[0].pathType=Prefix \
+  --set image.tag=$IMAGE_TAG

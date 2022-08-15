@@ -1,7 +1,7 @@
 aws_region       = "us-east-1"
-vpc_name         = "testVPC"
-efs_name         = "testEFS"
-eks_cluster_name = "testEKS"
+vpc_name         = "veeVPC"
+efs_name         = "veeEFS"
+eks_cluster_name = "veeEKS"
 eks_node_groups  = {
   small = {
     instance_type = "t3.small"

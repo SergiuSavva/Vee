@@ -25,9 +25,11 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "vee-terraform-state-storage"
-    key    = "terraform.tfstate"
-    region = "us-east-1"
+    bucket  = "vee-terraform-state-storage"
+    key     = "terraform.tfstate"
+    region  = "us-east-1"
+    encrypt = true
+    profile = "savvaco"
   }
 }
 
@@ -39,6 +41,8 @@ provider "aws" {
       CreatedBy = "Terraform"
     }
   }
+  shared_credentials_files = ["/Users/sergiu/.aws/credentials"]
+  profile                  = "savvaco"
 }
 
 provider "kubernetes" {

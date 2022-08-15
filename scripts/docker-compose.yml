@@ -1,0 +1,58 @@
+version: "3.3"
+
+services:
+
+  # Laravel Application containers
+  lrvl-nginx:
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-nginx:${IMAGE_TAG}
+    container_name: lrvl_nginx_container
+    build:
+        context: ../Applications/Laravel
+        dockerfile: nginx.Dockerfile
+    environment:
+      PHP_UPSTREAM_CONTAINER: lrvl-php-fpm
+      PHP_UPSTREAM_PORT: 9000
+    ports:
+      - "80:80"
+    depends_on:
+      - lrvl-php-fpm
+
+  lrvl-php-fpm:
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-php-fpm:${IMAGE_TAG}
+    container_name: lrvl_php_fpm_container
+    build:
+        context: ../Applications/Laravel
+        dockerfile: php-fpm.Dockerfile
+
+  lrvl-php-worker:
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-php-cli:${IMAGE_TAG}
+    container_name: lrvl_php_worker_container
+    build:
+      context: ../Applications/Laravel
+      dockerfile: php-cli.Dockerfile
+
+
+  # Wordpress Application containers
+  wordpress:
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/wordpress:${IMAGE_TAG}
+    build: ../Applications/Wordpress
+    ports:
+      - '80:8080'
+      - '443:8443'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - WORDPRESS_DATABASE_HOST=database
+      - WORDPRESS_DATABASE_PORT_NUMBER=3306
+      - WORDPRESS_DATABASE_USER=root
+      - WORDPRESS_DATABASE_NAME=wp
+      - WORDPRESS_DATABASE_PASSWORD=mysqlrootpass
+
+
+  nextjs:
+    image: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/nextjs:${IMAGE_TAG}
+    build:
+        context: ../Applications/NextJs
+        dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
