@@ -14,7 +14,6 @@ on:
       - develop
 
 env:
-  AWS_DEFAULT_REGION: us-east-1
   AWS_ECR_REGION: eu-west-1
   AWS_EKS_REGION: us-east-1
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
@@ -67,14 +66,13 @@ jobs:
           aws-region: ${{ env.AWS_EKS_REGION }}
 
       - name: helm deploy
-        uses: koslib/helm-eks-action@v1.22.0
+        uses: koslib/helm-eks-action@v1.24.1
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
           IMAGE_TAG: ${{ github.sha }}
           GH_PR: ${{ github.event.number }}
         with:
           plugins: "https://github.com/jkroepke/helm-secrets" # optional
-
           command: IaC/deploy.sh pr$GH_PR
 
 #      - name: Get URL
