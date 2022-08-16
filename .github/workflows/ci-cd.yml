@@ -71,9 +71,10 @@ jobs:
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
           IMAGE_TAG: ${{ github.sha }}
+          GH_PR: ${{ github.event.number }}
         with:
           entrypoint: /bin/bash
-          args: IaC/deploy.sh pr${{ github.event.number }}
+          args: IaC/deploy.sh pr$GH_PR
 
 #      - name: Get URL
 #        id: url
