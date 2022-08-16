@@ -3,6 +3,8 @@ NAMESPACE=$1
 BASE_DOMAIN=savvaco.net
 IMAGE_TAG=${2:-latest}
 
+cd $(dirname "$0")
+
 # Create Kubernetes namespace and switch to it
 kubectl create namespace $NAMESPACE || true
 kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE
