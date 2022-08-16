@@ -73,7 +73,9 @@ jobs:
           GH_PR: ${{ github.event.number }}
         with:
           plugins: "https://github.com/jkroepke/helm-secrets" # optional
-          command: IaC/deploy.sh pr$GH_PR
+          command: |
+            cd IaC
+            exec ./deploy.sh pr$GH_PR
 
 #      - name: Get URL
 #        id: url
