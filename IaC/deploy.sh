@@ -4,15 +4,15 @@ BASE_DOMAIN=savvaco.net
 IMAGE_TAG=${2:-latest}
 
 cd $(dirname "$0")
+aws eks update-kubeconfig --name veeEKS
 
 # Create Kubernetes namespace and switch to it
 kubectl create namespace $NAMESPACE || true
 kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE
 
-helm repo update
-
 # Add Bitnami Helm charts repository
 helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
 
 # Install MySQL
 helm upgrade -i mysql bitnami/mysql --version 9.2.0 -f helm/mysql.yaml \
