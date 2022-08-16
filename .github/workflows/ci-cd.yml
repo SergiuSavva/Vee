@@ -1,8 +1,9 @@
 name: Continuous Integration and Continuous Deployment
 
 on:
-#  push:
-#    branches:
+  push:
+    branches:
+      - test1
 #      - develop
 #      - release/*
 #      - main
