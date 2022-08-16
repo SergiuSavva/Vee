@@ -67,16 +67,14 @@ jobs:
           aws-region: ${{ env.AWS_EKS_REGION }}
 
       - name: helm deploy
-        uses: koslib/helm-eks-action@v1.24.1
+        uses: docker://alpine/k8s:1.22.10
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
           IMAGE_TAG: ${{ github.sha }}
           GH_PR: ${{ github.event.number }}
         with:
-          plugins: "https://github.com/jkroepke/helm-secrets" # optional
-          command: |
-            cd IaC
-            exec ./deploy.sh pr$GH_PR
+          entrypoint: /bin/bash
+          args: IaC/deploy.sh pr$GH_PR
 
 #      - name: Get URL
 #        id: url
