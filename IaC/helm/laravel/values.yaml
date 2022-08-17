@@ -15,6 +15,8 @@ nginx:
   replicas: 1
   image:
     repository: 078449232710.dkr.ecr.eu-west-1.amazonaws.com/lrvl-nginx
+    pullPolicy: Always
+    tag: latest
   service:
     type: NodePort
     port: 80

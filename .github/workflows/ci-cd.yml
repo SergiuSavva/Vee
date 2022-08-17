@@ -3,6 +3,7 @@ name: Continuous Integration and Continuous Deployment
 on:
 #  push:
 #    branches:
+#      - test1
 #      - develop
 #      - release/*
 #      - main
@@ -14,7 +15,8 @@ on:
       - develop
 
 env:
-  AWS_DEFAULT_REGION: us-east-1
+  AWS_ECR_REGION: eu-west-1
+  AWS_EKS_REGION: us-east-1
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
 
 jobs:
@@ -31,7 +33,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          aws-region: ${{ env.AWS_ECR_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -41,7 +43,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }}
           GH_PR: ${{ github.event.number }}
         run: |
           cd scripts
@@ -62,18 +63,15 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          aws-region: ${{ env.AWS_EKS_REGION }}
 
-      - name: helm deploy
-        uses: koslib/helm-eks-action@v1.22.0
+      - name: Deploy
+        uses: docker://alpine/k8s:1.22.10
         env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-          IMAGE_TAG: ${{ github.sha }}
-          GH_PR: ${{ github.event.number }}
+          GH_PR: pr${{ github.event.number }}
         with:
-          plugins: "https://github.com/jkroepke/helm-secrets" # optional
-
-          command: IaC/deploy.sh pr$GH_PR
+          entrypoint: /bin/bash
+          args: IaC/deploy.sh pr${{ github.event.number }} pr${{ github.event.number }}
 
 #      - name: Get URL
 #        id: url

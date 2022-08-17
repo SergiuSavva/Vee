@@ -8,7 +8,7 @@ on:
       - develop
 
 env:
-  AWS_DEFAULT_REGION: eu-west-1
+  AWS_DEFAULT_REGION: us-east-1
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
 
 jobs:
@@ -27,13 +27,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
-      - name: delete EKS namespace
-        uses: koslib/helm-eks-action@v1.22.0
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-          IMAGE_TAG: ${{ github.sha }}
-          PR_NUMBER: ${{ github.event.number }}
+      - name: Delete EKS namespace
+        uses: docker://alpine/k8s:1.22.10
         with:
-          plugins: "https://github.com/jkroepke/helm-secrets" # optional
-          command: |
-            kubectl delete namespace pr$PR_NUMBER --all --force --wait
+          entrypoint: /bin/bash
+          args: kubectl delete namespace pr${{ github.event.number }} --all --force --wait
+
