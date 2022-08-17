@@ -35,7 +35,9 @@ helm upgrade -i lrvl helm/laravel -f helm/laravel/values.yaml \
   --set nginx.ingress.hosts[0].host=laravel.$NAMESPACE.$BASE_DOMAIN \
   --set nginx.ingress.hosts[0].paths[0].path="/" \
   --set nginx.ingress.hosts[0].paths[0].pathType=Prefix \
-  --set image.tag=$IMAGE_TAG
+  --set nginx.image.tag=$IMAGE_TAG \
+  --set php_cli.image.tag=$IMAGE_TAG \
+  --set php_fpm.image.tag=$IMAGE_TAG
 
 # Install Wordpress app
 helm upgrade -i wordpress bitnami/wordpress --version 15.0.12 -f helm/wordpress.yaml \
