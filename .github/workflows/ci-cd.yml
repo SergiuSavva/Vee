@@ -71,7 +71,7 @@ jobs:
           GH_PR: pr${{ github.event.number }}
         with:
           entrypoint: /bin/bash
-          args: IaC/deploy.sh $GH_PR $GH_PR
+          args: IaC/deploy.sh pr${{ github.event.number }} pr${{ github.event.number }}
 
 #      - name: Get URL
 #        id: url
