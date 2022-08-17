@@ -40,7 +40,8 @@ helm upgrade -i lrvl helm/laravel -f helm/laravel/values.yaml \
 # Install Wordpress app
 helm upgrade -i wordpress bitnami/wordpress --version 15.0.12 -f helm/wordpress.yaml \
   --set ingress.hostname=wp.$NAMESPACE.$BASE_DOMAIN \
-  --set ingress.annotations."external-dns\.alpha\.kubernetes\.io\/hostname"=wp.$NAMESPACE.$BASE_DOMAIN
+  --set ingress.annotations."external-dns\.alpha\.kubernetes\.io\/hostname"=wp.$NAMESPACE.$BASE_DOMAIN \
+  --set image.tag=$IMAGE_TAG
 
 # Wait for WP installation and install graphql plugin
 kubectl wait --for=condition=Available=True --timeout=10m deployment/wordpress
